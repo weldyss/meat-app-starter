@@ -6,6 +6,8 @@ import { OrderService } from './order.service';
 import { CartItem } from '../shopping-cart/cart-item.model';
 import { Order, OrderItem } from './order.model';
 
+import 'rxjs/add/operator/do'
+
 @Component({
   selector: 'mt-order',
   templateUrl: './order.component.html'
@@ -26,6 +28,8 @@ export class OrderComponent implements OnInit {
   constructor(private orderService: OrderService, private router: Router, private formBuilder: FormBuilder) { }
 
   delivery: number = 8;
+
+  orderId:string;
 
   ngOnInit() {
     this.orderForm = this.formBuilder.group({
@@ -73,11 +77,17 @@ export class OrderComponent implements OnInit {
     return this.orderService.remove(item);
   }
 
+  isOrderCompleted():boolean {
+    return this.orderId !== undefined
+  }
+
   checkOrder(order: Order) {
     order.orderItems = this.cartItems().map(
       (item:CartItem) => new OrderItem(item.quantity, item.menuItem.id)
     )
-    this.orderService.checkOrder(order).subscribe(
+    this.orderService.checkOrder(order).do((orderId: string) => {
+      this.orderId = orderId
+    }).subscribe(
       (orderId: string) => {
         console.log('Compra concluida', orderId)
         this.router.navigate(['/order-summary'])

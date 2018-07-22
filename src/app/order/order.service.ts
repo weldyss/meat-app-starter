@@ -11,7 +11,7 @@ import { LoginService } from "../security/login/login.service";
 
 @Injectable()
 export class OrderService {
-  constructor(private cartService: ShoppingCartService, private http: HttpClient, private loginService: LoginService ) {}
+  constructor(private cartService: ShoppingCartService, private http: HttpClient) {}
 
   cartItems(): CartItem[] {
     return this.cartService.items
@@ -35,9 +35,7 @@ export class OrderService {
 
   checkOrder(order: Order): Observable<string> {
     let headers = new HttpHeaders()
-    if (this.loginService.isLoggedIn()) {
-      headers = headers.set('Authorization', `Bearer ${this.loginService.user.accessToken}`)
-    }
+    
     return this.http.post<Order>(`${MEAT_API}/orders`, order, {headers: headers}).map(order => order.id)
   }
 
