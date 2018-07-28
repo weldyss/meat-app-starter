@@ -7,7 +7,6 @@ import { Observable } from "rxjs/Observable";
 import 'rxjs/operator/map';
 
 import { MEAT_API } from "../app.api";
-import { LoginService } from "../security/login/login.service";
 
 @Injectable()
 export class OrderService {
