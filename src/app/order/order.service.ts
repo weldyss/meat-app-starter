@@ -3,8 +3,9 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ShoppingCartService } from "../shopping-cart/shopping-cart.service";
 import { CartItem } from "../shopping-cart/cart-item.model";
 import { Order } from "./order.model";
-import { Observable } from "rxjs/Observable";
-import 'rxjs/operator/map';
+import { Observable } from "rxjs";
+
+import { map } from "rxjs/operators";
 
 import { MEAT_API } from "../app.api";
 
@@ -35,7 +36,7 @@ export class OrderService {
   checkOrder(order: Order): Observable<string> {
     let headers = new HttpHeaders()
     
-    return this.http.post<Order>(`${MEAT_API}/orders`, order, {headers: headers}).map(order => order.id)
+    return this.http.post<Order>(`${MEAT_API}/orders`, order, {headers: headers}).pipe(map(order => order.id))
   }
 
   clear() {
